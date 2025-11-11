@@ -8,7 +8,7 @@
 
 // Open loop motor control example
 #include <SimpleFOC.h>
-//#include <SimpleFOCDrivers.h> // --- NEW --- (May be needed for current sense)
+//#include <SimpleFOCDrivers.h> // (May be needed for current sense)
 
 // BLDC motor & driver instance
 // BLDCMotor motor = BLDCMotor(pole pair number);
@@ -20,30 +20,33 @@ BLDCDriver6PWM driver = BLDCDriver6PWM(13,14, 11,12, 9,10);
 //HallSensor sensor = HallSensor(HALL_A, HALL_B, HALL_C, POLE_PAIRS);
 HallSensor sensor = HallSensor(42, 41, 40, 46); // 46 is pole pair count
 
-// // --- NEW ---
-// // InlineCurrentSense(float shunt_resistor, float gain, int pinA, int pinB, int pinC (optional))
-// //   - shunt_resistor: Shunt resistance in Ohms (e.g., 0.01)
-// //   - gain:           Amplifier gain (e.g., 50)
-// //   - pinA, pinB:     MCU Analog (ADC) pins reading the amplified voltage for phase A and B
-// // ** YOU MUST CHANGE THESE VALUES TO MATCH YOUR HARDWARE **
-// float shunt_resistance = 0.01; // Ohms
-// float amp_gain = 50.0;         // V/V
-// int pin_current_A = A0;        // Example analog pin 
-// int pin_current_B = A1;        // Example analog pin
-// InlineCurrentSense current_sense = InlineCurrentSense(shunt_resistance, amp_gain, pin_current_A, pin_current_B);
-// // --- END NEW ---
+// !!DO NOT DELETE THESE COMMENTS!!
+// On main ESP32 V_amp_M1A is GPIO4 and V_amp_M1B is GPIO5
+// On main ESp32 V_amp_M2A is GPIO2 and V_amp_M2B is GPIO1
+// Shunt resistor resistance is 2.5 milliohms
+// The gain is 20V/V. 
 
-// HallCurrentSense(int pinA, int pinB, float sensitivity, int pinC (optional))
-//
-//   - pinA, pinB:   MCU Analog (ADC) pins reading the sensor's OUT pin
-//   - sensitivity:  The sensor's sensitivity in Volts per Amp (V/A)
-//
-// Example: An ACS758-050B has a sensitivity of 0.04V/A (or 40mV/A)
+// Current Sensing
+// InlineCurrentSense(float shunt_resistor, float gain, int pinA, int pinB, int pinC (optional))
+//   - shunt_resistor: Shunt resistance in Ohms (e.g., 0.01)
+//   - gain:           Amplifier gain (e.g., 50)
+//   - pinA, pinB:     MCU Analog (ADC) pins reading the amplified voltage for phase A and B
 
-float sensor_sensitivity = 0.04; // Example: 40mV/A = 0.04V/A
-int pin_current_A = A0;          // Example analog pin 
-int pin_current_B = A1;          // Example analog pin
-HallCurrentSense current_sense = HallCurrentSense(pin_current_A, pin_current_B, sensor_sensitivity);
+// Motor 1
+float shunt_resistance = 0.0025; // 2.5 milliohms
+float amp_gain = 20.0;         // V/V
+int pin_current_A = 4;
+int pin_current_B = 5;
+InlineCurrentSense current_sense = InlineCurrentSense(shunt_resistance, amp_gain, pin_current_A, pin_current_B);
+
+// float shunt_resistance = 0.0025; // 2.5 milliohms don't need to redefine
+// float amp_gain = 20.0;         // same gain. don't need to redefine
+//--- uncomment below for 2nd motor --
+// int pin_current2_A = 2;
+// int pin_current2_B = 1;
+// InlineCurrentSense current_sense2 = InlineCurrentSense(shunt_resistance, amp_gain, pin_current_A, pin_current_B);
+// --
+
 
 
 //target variable
