@@ -19,3 +19,5 @@ Serial.print(hallB);
 Serial.print(" ");
 Serial.println(hallC);
 }
+
+// you need to upload with USB and then to read from serial you connected to the UART port (the left port if the fuse is at the top of the board relative to your FOV)
